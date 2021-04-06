@@ -53,10 +53,10 @@ done
 if [[ $ports == *"22"* ]]
 then
 	echo "Checking for bad ssh keys..."
-	sshkey=$(ssh-keyscan -t rsa $1 | awk -e '$1 !~ /^#/ {print $0}')
+	sshkey=$(ssh-keyscan -t rsa $1 | awk '{print $2 " " $3}')
 	if [[ $(cat badpublickeys.txt) == *"$sshkey"* ]]
 	then
 		echo "Weak ssh-rsa public key found..."
-		echo $sshkey
 	fi
+	echo $sshkey
 fi
