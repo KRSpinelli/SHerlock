@@ -53,5 +53,5 @@ done
 if [[ $ports == *"22"* ]]
 then
 	echo "Checking for bad ssh keys..."
-	ssh-keyscan $1
+	ssh-keyscan $1 | awk -e '$1 !~ /^#/ {print $0}'
 fi
