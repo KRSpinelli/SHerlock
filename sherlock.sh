@@ -53,4 +53,5 @@ done
 if [[ $ports == *"22"* ]]
 then
 	echo "Checking for bad ssh keys..."
+	ssh-keyscan $1
 fi
