@@ -48,3 +48,9 @@ do
 	paths=$(grep -v "403" $1/$FOO/gobuster_results | awk '{print $1}' | tr '\n' ', ' | sed 's/,$/\n/')
 	echo "URL paths found: $paths"
 done
+
+# check for bad ssh keys
+if [[ $ports == *"22"* ]]
+then
+	echo "Checking for bad ssh keys..."
+fi
