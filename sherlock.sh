@@ -46,7 +46,6 @@ echo "Beginning dirbuster scans..."
 
 IFS=',' read -r -a weblist <<< "$https"
 
-
 for FOO in "${weblist[@]}"
 do
 	echo "Conducting directory sweep of http://$1:$FOO"
@@ -55,6 +54,12 @@ do
 	paths=$(grep -v "403" $FOO/gobuster_results | awk '{print $1}' | tr '\n' ', ' | sed 's/,$/\n/')
 	echo "URL paths found: $paths"
 done
+
+echo "Running Nikto on $1"
+if [ ${#weblist} > 1 ]
+then
+	nikto -host $1
+fi
 
 # check for bad ssh keys
 if [[ $ports == *"22"* ]]
