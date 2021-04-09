@@ -58,7 +58,7 @@ done
 echo "Running Nikto on $1"
 if [ ${#weblist} > 1 ]
 then
-	nikto -host $1
+	nikto -C all -host $1
 fi
 
 # check for bad ssh keys
