@@ -1,0 +1,2 @@
+1. nmap --script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version -p445 $1 -> check for samba-cry aka EternalRed
+-----------------------------------------------------------
