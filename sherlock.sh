@@ -17,26 +17,34 @@ ANS=`grep -i "transmitted" $1-ping.log | awk '{if ($4>0) print "true"; else prin
 if [ $ANS == 'true' ]
 then
 	echo "Connection successful!"
+	echo "Beginning nmap to discover open ports..."
+
+	ports=$(nmap -p- --min-rate=1000  -T5 $1 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+	echo "Ports discovered: $ports"
+	echo "..."
+	echo "Performing detailed scan of open ports..."
+
+	nmap -oA "$1" -sC -sV -p$ports $1
+
 else
 	echo "Host is either unreachable or blocking ICMP requests :("
 	read -p "do you want to continue anyway? (y/n)" cont
 	if [ $cont == 'y' ]
 	then
-		:
+		echo "Beginning nmap to discover open ports..."
+
+		ports=$(nmap -Pn -p- --min-rate=1000  -T5 $1 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+		echo "Ports discovered: $ports"
+		echo "..."
+		echo "Performing detailed scan of open ports..."
+
+		nmap -Pn -oA "$1" -sC -sV -p$ports $1
+
+
 	else
 		exit 0
 	fi
 fi
-
-echo "Beginning nmap to discover open ports..."
-
-ports=$(nmap -Pn -p- --min-rate=1000  -T5 $1 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
-
-echo "Ports discovered: $ports"
-echo "..."
-echo "Performing detailed scan of open ports..."
-
-nmap -Pn -oA "$1" -sC -sV -p$ports $1
 
 https=$(cat $1.nmap | grep http | grep tcp | awk '{print $1}' | sed 's/\/tcp$//' | tr '\n' ',' | sed s/,$//)
 
